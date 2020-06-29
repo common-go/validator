@@ -1,7 +1,8 @@
 package validator
 
 type ErrorMessage struct {
-	Field   string `json:"field,omitempty" bson:"field,omitempty" gorm:"column:field"`
-	Code    string `json:"code,omitempty" bson:"code,omitempty" gorm:"column:code"`
-	Message string `json:"message,omitempty" bson:"message,omitempty" gorm:"column:message"`
+	Field   string `mapstructure:"field" json:"field,omitempty" gorm:"column:field" bson:"field,omitempty" dynamodbav:"field,omitempty" firestore:"field,omitempty"`
+	Code    string `mapstructure:"code" json:"code,omitempty" gorm:"column:code" bson:"code,omitempty" dynamodbav:"code,omitempty" firestore:"code,omitempty"`
+	Param   string `mapstructure:"param" json:"param,omitempty" gorm:"column:param" bson:"param,omitempty" dynamodbav:"param,omitempty" firestore:"param,omitempty"`
+	Message string `mapstructure:"message" json:"message,omitempty" gorm:"column:message" bson:"message,omitempty" dynamodbav:"message,omitempty" firestore:"message,omitempty"`
 }
