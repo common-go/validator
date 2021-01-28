@@ -2,20 +2,19 @@ package validator
 
 import (
 	"net"
+	"net/url"
 	"regexp"
 	"strings"
 )
 
 var (
 	emailPattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
-	urlPattern   = `^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$`
 	phonePattern = `^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$`
 	faxPattern   = `^(\+?\d{1,}(\s?|\-?)\d*(\s?|\-?)\(?\d{2,}\)?(\s?|\-?)\d{3,}\s?\d{3,})$`
 
 	regEmail = regexp.MustCompile(emailPattern)
-	regUrl = regexp.MustCompile(urlPattern)
 	regPhone = regexp.MustCompile(phonePattern)
-	regFax = regexp.MustCompile(faxPattern)
+	regFax   = regexp.MustCompile(faxPattern)
 )
 
 func IsEmpty(v string) bool {
@@ -49,7 +48,7 @@ func IsDashDigit(v string) bool {
 	return true
 }
 
-func IsCharacterCode(v string) bool {
+func IsAbc(v string) bool {
 	if IsEmpty(v) == true {
 		return false
 	}
@@ -76,7 +75,23 @@ func IsCode(v string) bool {
 	}
 	return true
 }
+func IsUserName(v string) bool {
+	if len(v) < 6 {
+		return false
+	}
+	if IsEmail(v) {
+		return true
+	}
+	if IsPhone(v) {
+		return true
+	}
+	if len(v) > 30 {
+		return false
+	}
 
+	v2 := v + "@gmail.com"
+	return IsEmail(v2)
+}
 func IsDashCode(v string) bool {
 	if IsEmpty(v) == true {
 		return false
@@ -84,7 +99,7 @@ func IsDashCode(v string) bool {
 	var len = len(v) - 1
 	for i := 0; i <= len; i++ {
 		var chr = string(v[i])
-		if !((chr >= "0" && chr <= "9") || (chr >= "A" && chr <= "Z") || (chr >= "a" && chr <= "z") || chr == "-") {
+		if !((chr >= "0" && chr <= "9") || (chr >= "A" && chr <= "Z") || (chr >= "a" && chr <= "z") || chr == "-" || chr == "_") {
 			return false
 		}
 	}
@@ -99,7 +114,8 @@ func IsEmail(v string) bool {
 }
 
 func IsUrl(v string) bool {
-	return regUrl.MatchString(v)
+	u, err := url.Parse(v)
+	return err == nil && u.Scheme != "" && u.Host != ""
 }
 
 func IsIpAddressV4(s string) bool {
