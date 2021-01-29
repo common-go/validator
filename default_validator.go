@@ -10,19 +10,23 @@ import (
 )
 
 type DefaultValidator struct {
+	validate           *validator.Validate
 	CustomValidateList []CustomValidate
 }
 
 func NewDefaultValidator() *DefaultValidator {
 	list := GetCustomValidateList()
-	return &DefaultValidator{list}
+	return &DefaultValidator{CustomValidateList: list}
 }
 
 func (p *DefaultValidator) Validate(ctx context.Context, model interface{}) ([]ErrorMessage, error) {
 	errors := make([]ErrorMessage, 0)
-	validate := validator.New()
-	validate = p.RegisterCustomValidate(validate)
-	err := validate.Struct(model)
+	if p.validate == nil {
+		validate := validator.New()
+		validate = p.RegisterCustomValidate(validate)
+		p.validate = validate
+	}
+	err := p.validate.Struct(model)
 
 	if err != nil {
 		errors, err = MapErrors(err)

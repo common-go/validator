@@ -107,9 +107,6 @@ func IsDashCode(v string) bool {
 }
 
 func IsEmail(v string) bool {
-	if IsEmpty(v) == true {
-		return false
-	}
 	return regEmail.MatchString(v)
 }
 
@@ -117,12 +114,18 @@ func IsUrl(v string) bool {
 	u, err := url.Parse(v)
 	return err == nil && u.Scheme != "" && u.Host != ""
 }
-
+func IsUri(v string) bool {
+	_, err := url.ParseRequestURI(v)
+	return err == nil
+}
+func IsIpAddress(s string) bool {
+	ip := net.ParseIP(s)
+	return ip != nil
+}
 func IsIpAddressV4(s string) bool {
 	ip := net.ParseIP(s)
 	return ip != nil && strings.Contains(s, ".")
 }
-
 func IsIpAddressV6(s string) bool {
 	ip := net.ParseIP(s)
 	return ip != nil && strings.Contains(s, ":")
