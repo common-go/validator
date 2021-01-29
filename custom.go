@@ -31,103 +31,54 @@ func GetCustomValidateList() (list []CustomValidate) {
 	list = append(list, CustomValidate{Fn: CheckPattern, Tag: "regex"})
 	return
 }
-func CheckEmail(fl validator.FieldLevel) bool {
+func CheckString(fl validator.FieldLevel, fn func(string) bool) bool {
 	s := fl.Field().String()
 	if len(s) == 0 {
 		return true
 	}
-	return IsEmail(s)
+	return fn(s)
+}
+func CheckEmail(fl validator.FieldLevel) bool {
+	return CheckString(fl, IsEmail)
 }
 func CheckUrl(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsUrl(s)
+	return CheckString(fl, IsUrl)
 }
 func CheckUri(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsUri(s)
+	return CheckString(fl, IsUri)
 }
 func CheckFax(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsFax(s)
+	return CheckString(fl, IsFax)
 }
 func CheckPhone(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsPhone(s)
+	return CheckString(fl, IsPhone)
 }
 func CheckIp(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsIpAddress(s)
+	return CheckString(fl, IsIpAddress)
 }
 func CheckIpV4(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsIpAddressV4(s)
+	return CheckString(fl, IsIpAddressV4)
 }
 func CheckIpV6(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsIpAddressV6(s)
+	return CheckString(fl, IsIpAddressV6)
 }
 func CheckDigit(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsDigit(s)
+	return CheckString(fl, IsDigit)
 }
 func CheckAbc(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsAbc(s)
+	return CheckString(fl, IsAbc)
 }
 func CheckId(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsCode(s)
+	return CheckString(fl, IsCode)
 }
 func CheckCode(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsDashCode(s)
+	return CheckString(fl, IsDashCode)
 }
 func CheckCountryCode(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsCountryCode(s)
+	return CheckString(fl, IsCountryCode)
 }
 func CheckUsername(fl validator.FieldLevel) bool {
-	s := fl.Field().String()
-	if len(s) == 0 {
-		return true
-	}
-	return IsUserName(s)
+	return CheckString(fl, IsUserName)
 }
 func CheckPattern(fl validator.FieldLevel) bool {
 	param := fl.Param()
