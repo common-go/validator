@@ -9,6 +9,11 @@ import (
 	"unicode"
 )
 
+const (
+	method = "method"
+	patch  = "patch"
+)
+
 type DefaultValidator struct {
 	validate           *validator.Validate
 	CustomValidateList []CustomValidate
@@ -30,6 +35,16 @@ func (p *DefaultValidator) Validate(ctx context.Context, model interface{}) ([]E
 
 	if err != nil {
 		errors, err = MapErrors(err)
+	}
+	v := ctx.Value(method)
+	if v != nil {
+		v2, ok := v.(string)
+		if ok {
+			if v2 == patch {
+				errs := RemoveRequiredError(errors)
+				return errs, nil
+			}
+		}
 	}
 	return errors, err
 }
@@ -97,4 +112,18 @@ func (p *DefaultValidator) RegisterCustomValidate(validate *validator.Validate) 
 		validate.RegisterValidation(v.Tag, v.Fn)
 	}
 	return validate
+}
+func RemoveRequiredError(errors []ErrorMessage) []ErrorMessage {
+	if errors == nil || len(errors) == 0 {
+		return errors
+	}
+	errs := make([]ErrorMessage, 0)
+	for _, s := range errors {
+		if s.Code != "required" && !strings.HasPrefix(s.Code, "minlength") {
+			errs = append(errs, s)
+		} else if strings.Index(s.Field, ".") >= 0 {
+			errs = append(errs, s)
+		}
+	}
+	return errs
 }
