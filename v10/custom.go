@@ -1,6 +1,6 @@
-package validator
+package v10
 
-import "github.com/go-playground/validator/v10"
+import "github.com/go-playground/validator"
 
 type CustomValidate struct {
 	Fn  validator.Func

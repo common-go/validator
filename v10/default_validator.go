@@ -1,9 +1,9 @@
-package validator
+package v10
 
 import (
 	"context"
 	"fmt"
-	"github.com/go-playground/validator/v10"
+	"github.com/go-playground/validator"
 	"reflect"
 	"strings"
 	"unicode"
