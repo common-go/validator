@@ -1,8 +1,8 @@
-package v10
+package v9
 
 import (
 	s "github.com/core-go/validator"
-	"github.com/go-playground/validator/v10"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 type CustomValidate struct {
