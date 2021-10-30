@@ -5,25 +5,26 @@
 
 ## Installation
 
-Please make sure to initialize a Go module before installing common-go/validator:
+Please make sure to initialize a Go module before installing core-go/validator:
 
 ```shell
-go get -u github.com/common-go/validator
+go get -u github.com/core-go/validator
 ```
 
 Import:
 
 ```go
-import "github.com/common-go/validator"
+import "github.com/core-go/validator"
 ```
 
 ## Details:
 #### error_message.go
 ```go
 type ErrorMessage struct {
-	Field   string `json:"field,omitempty" bson:"field,omitempty" gorm:"column:field"`
-	Code    string `json:"code,omitempty" bson:"code,omitempty" gorm:"column:code"`
-	Message string `json:"message,omitempty" bson:"message,omitempty" gorm:"column:message"`
+	Field   string `mapstructure:"field" json:"field,omitempty" gorm:"column:field" bson:"field,omitempty" dynamodbav:"field,omitempty" firestore:"field,omitempty"`
+	Code    string `mapstructure:"code" json:"code,omitempty" gorm:"column:code" bson:"code,omitempty" dynamodbav:"code,omitempty" firestore:"code,omitempty"`
+	Param   string `mapstructure:"param" json:"param,omitempty" gorm:"column:param" bson:"param,omitempty" dynamodbav:"param,omitempty" firestore:"param,omitempty"`
+	Message string `mapstructure:"message" json:"message,omitempty" gorm:"column:message" bson:"message,omitempty" dynamodbav:"message,omitempty" firestore:"message,omitempty"`
 }
 ```
 
@@ -41,7 +42,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/common-go/validator"
+	"github.com/core-go/validator"
+	"github.com/core-go/validator/v10"
 )
 
 type User struct {
@@ -59,7 +61,7 @@ func main() {
 		Email:     "peter.parker",
 	}
 
-	v := validator.NewDefaultValidator()
+	v := v10.NewValidator()
 	errors, _ := v.Validate(ctx, user)
 	// Output will be '[{firstName required } {lastName required } {email email }]'
 	fmt.Println(errors)
